@@ -1,0 +1,31 @@
+#re_populate_shadow {
+    width:  100%;
+    border-radius: 15px;
+    height: 500px;
+    overflow: auto;
+}
+#cancelLayOut {
+    float: right;
+    cursor: pointer;
+    right: 0;
+    font-size: 24px;
+}
+#cancelLayOut:hover{ 
+    color: orange;
+    font-weight: bold;
+}
+.viewImageFrame {
+    width: 100%;
+    height: 500px;
+    position: absolute;
+    overflow: hidden;
+}
+.viewImage {
+    cursor: pointer;
+    font-weight: bolder;
+    width: 100%;
+    margin-left: 20px;
+}
+.viewImage:hover {
+    color: blue;
+}

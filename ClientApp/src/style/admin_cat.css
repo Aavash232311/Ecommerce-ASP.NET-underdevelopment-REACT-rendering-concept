@@ -1,0 +1,68 @@
+#frame {
+    height: 500px;
+    width: 50%;
+}
+#productCategory{
+    width: 100%;
+}
+.badge {
+    margin-left: 5px;
+}
+#subLogo {
+    float: left;
+    margin-left: 5px;
+}
+.search_Cat {
+    margin-top: 5px;
+}
+.expand {
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+}
+#header {
+    width: 100%;
+}
+.loadMore {
+    text-decoration: underline;
+}
+.loadMore:hover {
+    color: rgb(110, 110, 170);
+    cursor: pointer;
+}
+#frame1 {
+    float: left;
+    margin-left: 10px;
+}
+.hoverGlow:hover {
+    color: orange;
+}
+.catBtn {
+    width: 100%;
+    background-color: rgb(242, 242, 242);
+    margin-top: 5px;
+    text-align: left;
+}
+
+#frame2 {
+    float: right;
+    margin-right: 10px;
+}
+.Frames {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    width: 45%;
+    height: 250px;
+    margin-left: 2px;
+    float: left;
+    overflow: auto;
+}
+
+#badge {
+    margin-top: -22px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+#seletCategoryFrame {
+    margin-left: 10px;
+}

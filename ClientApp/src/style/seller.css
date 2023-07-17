@@ -1,0 +1,28 @@
+#sideNav {
+    width: 100%;
+    background-color: #ffebee;
+    height: 50px;
+}
+
+#logo {
+    float: left;
+    font-family: cursive;
+    font-weight: bold;
+    margin-top: 10px;
+    user-select: none;
+}
+
+#list {
+    float: left;
+}
+
+.elem {
+    list-style: none;
+    float: left;
+    margin-left: 20px;
+    margin-top: 10px;
+    user-select: none;
+}
+.elem:hover {
+    font-weight: bold
+}

@@ -1,0 +1,19 @@
+.input {
+    font: left;
+    margin-left: 10px
+}
+.alignbigDiv {
+    width: 100%;
+}
+
+.label {
+    float: left;
+    font-weight: lighter;
+    margin-left: 10px;
+}
+
+@media screen and (max-width: 720px) {
+    .input {
+        width: 100%;
+    }
+}
