@@ -1,0 +1,8 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:44466",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "C:\\Engineering\\Full-stack-ASP.NET-CORE-main\\Full-stack-ASP.NET-CORE-main\\ClientApp\\",
+"MaxTimeoutInSeconds": "120"
+}
+}

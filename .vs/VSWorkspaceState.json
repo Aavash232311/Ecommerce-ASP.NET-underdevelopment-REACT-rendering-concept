@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ClientApp",
+    "\\ClientApp\\src",
+    "\\Controllers",
+    "\\Data",
+    "\\Models",
+    "\\Pages",
+    "\\Properties"
+  ],
+  "SelectedNode": "\\Controllers\\MarketController.cs",
+  "PreviewInSolutionExplorer": true
+}
