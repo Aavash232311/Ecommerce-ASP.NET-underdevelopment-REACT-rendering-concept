@@ -7,8 +7,8 @@
     "\\Data",
     "\\Models",
     "\\Pages",
-    "\\Properties"
+    "\\Properties",
+    "\\static"
   ],
-  "SelectedNode": "\\Controllers\\MarketController.cs",
   "PreviewInSolutionExplorer": true
 }

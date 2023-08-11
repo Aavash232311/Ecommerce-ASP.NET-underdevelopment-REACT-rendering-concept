@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-
+// netstat -ano | findstr :7142
 namespace restaurant_franchise.Controllers
 {
     // 1 Admin

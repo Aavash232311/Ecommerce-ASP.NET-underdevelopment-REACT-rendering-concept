@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using restaurant_franchise.Controllers;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Linq;
+using AutoMapper;
+using System.Reflection;
+using System.IO;
 
 namespace restaurant_franchise.Controllers
 {
@@ -28,7 +32,8 @@ namespace restaurant_franchise.Controllers
         public string description { get; set; } = string.Empty;
         public string discount_valid_date { get; set; } = string.Empty;
         public string product_condition { get; set; } = string.Empty;
-        public string related_tags {get; set;} = string.Empty;
+        public string related_tags { get; set; } = string.Empty;
+        public string type { get; set; } = string.Empty;
     }
 
     public class ImageKeyValue
@@ -126,12 +131,9 @@ namespace restaurant_franchise.Controllers
                 if (ObjectData == null) return new JsonResult(BadRequest("Something went wrong"));
                 var file = Request.Form.Files;
                 List<ImageKeyValue> keyval = new List<ImageKeyValue>();
-
                 Tool.Username(Request.Headers["Authorization"], out string username);
                 var user = _context.Users.Where(x => x.username == username).FirstOrDefault();
                 if (user == null) return new JsonResult(BadRequest());
-
-                // check file size for every image
                 foreach (var i in file)
                 {
                     float sizeInbYTE = (i.Length / 1024);
@@ -150,6 +152,7 @@ namespace restaurant_franchise.Controllers
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
                             await i.CopyToAsync(stream); // saving in file stream
+                            // appending saved file path for reference in database 
                             keyval.Add(new ImageKeyValue()
                             {
                                 name = i.Name,
@@ -169,39 +172,91 @@ namespace restaurant_franchise.Controllers
                 var product = new Product()
                 {
                     name = ObjectData.name,
-                    discount_amount = (decimal)ObjectData.price * ((decimal)ObjectData.discount_amount / 100),
+                    discount_amount = ObjectData.discount_amount,
                     price = ObjectData.price,
                     description = ObjectData.description,
                     user = user,
-                    main_image = pathFromArr(keyval, "main_image"),
-                    cover_0 = pathFromArr(keyval, "cover_0"),
-                    cover_1 = pathFromArr(keyval, "cover_1"),
-                    cover_2 = pathFromArr(keyval, "cover_2"),
-                    cover_3 = pathFromArr(keyval, "cover_3"),
-                    cover_4 = pathFromArr(keyval, "cover_4"),
                     addedDate = DateTime.Now,
                     product_condition = ObjectData.product_condition,
                     related_tags = tag
                 };
-                if (ObjectData.discount_valid_date != "") {
+
+                if (ObjectData.discount_valid_date != "")
+                {
                     DateTime.TryParseExact(ObjectData.discount_valid_date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
                     product.discount_valid_date = dateTime;
                 }
-                this._context.Products.Add(product);
+
+                // ObjectData.type.length > 0 then its an update endpoint
+                bool critetia = ObjectData.type.Length > 0;
+                if (critetia == false)
+                {
+                    var path = keyval.Where(x => x.name == "main_image").FirstOrDefault(); // main image is required
+                    if (path == null) return new JsonResult(BadRequest("Main IMAGE IS REQUIRED"));
+                }
+                // parent <- setting attribute dynamically and then that prouct object is gonna be copyed if
+                // we are trying to upadte a model
+                if (critetia == true)
+                {
+                    var getExistingProduct = _context.Products.Where(x => x.Id == Guid.Parse(ObjectData.type)).FirstOrDefault();
+                    if (getExistingProduct == null) return new JsonResult(BadRequest());
+                    // server defined function which copies to product to getExistingProduct
+                    var reference = getExistingProduct;
+                    Tool.CopyAttribute(product, getExistingProduct);
+                    CopyImages(keyval, getExistingProduct, critetia);
+                    getExistingProduct.Id = Guid.Parse(ObjectData.type); // copying does not automically assigns key
+                    await _context.SaveChangesAsync();
+                    return new JsonResult(Ok(getExistingProduct));
+                }
+                // work with image copying 
+                if (keyval.Count != 0)
+                {
+                    CopyImages(keyval, product, critetia);
+                }
+                _context.Products.Add(product);
                 await _context.SaveChangesAsync();
-                return new JsonResult(Ok(tag));
+                return new JsonResult(Ok());
             }
             catch (Exception ex)
             {
                 return new JsonResult(BadRequest(ex));
             }
         }
-        public string pathFromArr(List<ImageKeyValue> arr, string name)
+
+        public static void CopyImages(List<ImageKeyValue> arr, object obj, bool critetia)
+        {
+            foreach (var i in arr)
+            {
+                string name = i.name;
+                DynamicAttribute(name, obj, critetia, arr); // if updating update the current model
+            }
+        }
+
+        public static void DynamicAttribute(string name, object populatedObject, bool critetia, List<ImageKeyValue> arr)
         {
             var path = arr.Where(x => x.name == name).FirstOrDefault();
-            if (path == null) return "";
-            return path.path;
+            Type type = populatedObject.GetType();
+            PropertyInfo info = type.GetProperty(name);
+            if (critetia == true)
+            {
+                if (path == null)
+                {
+                    return;
+                }
+            }
+            if (path == null) return;
+            // for whatever reason setting a value in case of updating remove old image first
+            if (critetia) {
+                // remove old image 
+                var actualPath = Path.Combine(Directory.GetCurrentDirectory(), info.GetValue(populatedObject).ToString());
+                if (System.IO.File.Exists((actualPath)))
+                {
+                    System.IO.File.Delete((actualPath));
+                }
+            }
+            populatedObject.GetType().GetProperty(name).SetValue(populatedObject, path.path);
         }
+
 
         // Fetch User Product sort by recently added and add pagination later
         [HttpGet]
@@ -209,7 +264,8 @@ namespace restaurant_franchise.Controllers
         public IActionResult GetProducts()
         {
             Tool.Username(Request.Headers["Authorization"], out string username);
-            var products = _context.Products.Where(x => x.user.username == username).Take(10).ToArray();
+            var products = _context.Products.Where(x => x.user.username == username).Include(p => p.related_tags).Take(10).ToList();
+
             return new JsonResult(Ok(products));
         }
     }

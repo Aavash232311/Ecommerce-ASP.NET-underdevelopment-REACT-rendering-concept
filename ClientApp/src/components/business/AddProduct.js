@@ -23,7 +23,7 @@ export class AddProduct extends Component {
             cover_2: null,
             cover_3: null,
             cover_4: null,
-            product_condition: "just_like_new",
+            product_condition: "New",
             success: false,
             reverse_engineer: props.reverse_engineer ? true : false,
             view_img: null,
@@ -37,34 +37,18 @@ export class AddProduct extends Component {
     componentDidMount() {
         // in case of re populating data
         if (this.state.reverse_engineer === true) {
-            const populateData = this.props.populateData[0]; 
+            const populateData = this.props.populateData[0];
             let temp = [];
             for (let i in populateData) {
-                // reverse engineer tag inserting
-                if (i == "related_tags") {
-                    const arr = populateData[i];
-                    for (let j in arr) {
-                        const tst = arr[j].tags.split(" ");
-                        if (tst.length > 0) {
-                            temp.push(tst.join("_"));
-                        } else {
-                            temp.push(arr[j]);
-                        }
-                    }
-                } else {
-                    this.setState({ [i]: populateData[i] });
-                }
+                this.setState({ [i]: populateData[i] });
             }
-            temp = temp.join(" ");
-            this.setState({ related_tags: temp });
         }
     }
 
     AddProductState(ev) {
-        if (ev.target.type === "text" || ev.target.type == "number" || ev.target.type == "date") {
-            console.log(this.state);
-            this.setState({ [ev.target.name]: ev.target.type == "number" ? parseInt(ev.target.value) : ev.target.value }, () => {
-
+        if (ev.target.type === "text" || ev.target.type === "number" || ev.target.type === "date" || ev.target.type === "select-one") {
+            this.setState({ [ev.target.name]: ev.target.type === "number" ? parseInt(ev.target.value) : ev.target.value }, () => {
+             
             });
             return;
         }
@@ -83,18 +67,12 @@ export class AddProduct extends Component {
             price: this.state.price,
             discount_amount: this.state.discount_amount,
             discount_valid_date: this.state.discount_valid_date,
-            related_tags: this.state.related_tags,
-            //     description:
-            //     "<p>12</p>",
-            // discount_amount: 12,
-            // discount_valid_date: "2023-07-26",
-            // name: "stock2",
-            // price: 4590,
-            // product_condition: "just_like_new",
-            // related_tags: "mobile"
+            related_tags: this.state.related_tags.id,
+            type: this.state.reverse_engineer ?  this.props.populateData[0].id: "",
         }
         const stringObj = JSON.stringify(submitObject);
         formData.append("key", stringObj);
+        
         if (this.state.main_image == null) {
             alert("Atleast one image is required");
         }
@@ -111,12 +89,13 @@ export class AddProduct extends Component {
             },
             body: formData,
         }).then(rsp => rsp.json()).then((res) => {
-            console.log(res);
-            if (res.statusCode == 200) {
+            if (res.statusCode === 200) {
+                // set object of each and every value from update
+                for (const  i in res.value) {
+                    this.setState({[i]: res.value[i]});
+                }
                 this.setState({ success: true });
-                setTimeout(() => {
-                    // window.location.reload();
-                }, 500);
+                window.location.reload();
             }
         })
     }
@@ -152,7 +131,8 @@ export class AddProduct extends Component {
                     </div>
                 </center>) : null}
                 <form>
-                    <input onInput={(ev) => { this.AddProductState(ev) }} value={this.state.name ? this.state.name : ""} required className="input form-control" placeholder="Product Title" name="name" />
+                    <br/>
+                    <input onInput={(ev) => { this.AddProductState(ev) }} value={this.state.name ? this.state.name : ""} required className="input form-control" placeholder="Product Title" name="name" /> <br />
                     <input onInput={(ev) => { this.AddProductState(ev) }} value={this.state.price ? this.state.price : ""} required className="input form-control" placeholder="Price" name="price" type="number" />
                     <div className="input">
                         <span className="label">
@@ -174,12 +154,16 @@ export class AddProduct extends Component {
                         <span className="label">
                             Discount Valid Till
                         </span>
+                        <br />
                         <input value={this.state.discount_valid_date ? this.state.discount_valid_date.slice(0, 10) : ""} onInput={(ev) => { this.AddProductState(ev) }} type="date" name="discount_valid_date" className="input form-control" />
                         {/* <a href={dirUrlToPath(this.state.main_image)}>view</a>  */}
                         {/* <input   {...(this.state.reverse_engineer && this.state.discount_valid_date ? { value: '2023-03-06' } : {})} onInput={(ev) => { this.AddProductState(ev) }} type="date" name="discount_valid_date" className="input form-control" /> */}
                     </div> <br />
                     <div className="input alignbigDiv">
-                        <Category onChange={(ev) => {this.setState({related_tags: ev.id}, () => {console.log(this.state)})} }  />
+                        {this.state.reverse_engineer && this.state.related_tags !== null ? (<div>
+                           Selected: <b>{this.state.related_tags.productCategory}</b>
+                        </div>) : null}
+                        <Category className="input" onChange={(ev) => {this.setState({related_tags: ev})} }  />
                     </div>
                     <br />
                     <span className="label">
@@ -187,7 +171,7 @@ export class AddProduct extends Component {
                     </span> <br />
                     <input required type="file" onInput={(ev) => { this.AddProductState(ev) }} className="form-control input" accept="image/*" name="main_image" />
                     <span onClick={() => {
-                        this.setState({ view_img: dirUrlToPath(this.state.main_image) })
+                        this.setState({ view_img: dirUrlToPath(this.state.main_image) });
                     }} className="viewImage">view image</span>
                     <br />
                     <span className="label">
@@ -226,13 +210,15 @@ export class AddProduct extends Component {
                     <span className="label">
                         Select product condition
                     </span> <br />
-                    <select onInput={(ev) => { this.AddProductState(ev) }} name="product_condition" value={this.state.product_condition} required className="form-control input">
+                    <select onChange={(ev) => {this.AddProductState(ev) } } value={this.state.reverse_engineer ? this.state.product_condition : null} name="product_condition" required className="form-control input">
                         <option value="new">New</option>
                         <option value="brand_new">Brand new</option>
                         <option value="just_like_new">Just like new</option>
                         <option value="broken">Broken</option>
                     </select>
+                    <br/>
                     <button onClick={(ev) => { this.FormSubmit(ev) }} className="input btn btn-success">Add Product</button>
+                    <br/>
                     {this.state.success && <div className="alert alert-success input" role="alert">
                         Product Added Successfully { }
                     </div>}

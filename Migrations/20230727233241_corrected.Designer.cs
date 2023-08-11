@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using restaurant_franchise.Data;
 
@@ -11,9 +12,11 @@ using restaurant_franchise.Data;
 namespace restaurant_franchise.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230727233241_corrected")]
+    partial class corrected
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,8 +81,8 @@ namespace restaurant_franchise.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("discount_amount")
-                        .HasColumnType("real");
+                    b.Property<decimal>("discount_amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("discount_valid_date")
                         .HasColumnType("datetime2");
@@ -92,8 +95,8 @@ namespace restaurant_franchise.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("price")
-                        .HasColumnType("real");
+                    b.Property<int>("price")
+                        .HasColumnType("int");
 
                     b.Property<string>("product_condition")
                         .IsRequired()

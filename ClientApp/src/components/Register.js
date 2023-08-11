@@ -58,10 +58,11 @@ export class Register extends Component {
                 <div>{errorArr.err.map((i, j) => (<li className="errorList" key={j}>{i}</li>))}</div>
             )
         }
+        const inputRegisterFrame = "input";
         return (
             <div>
                 <center>
-                    <div id="frame">
+                    <div id="registerFrame">
                         <br />
                         <center>
                             <h5>Few steps to let you in</h5>
@@ -69,44 +70,44 @@ export class Register extends Component {
                         <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="username" className="input" id="standard-basic" label="username" variant="standard" />
+                        }} name="username" className="inputRegister" id="standard-basic" label="username" variant="standard" />
                         <br />
                         <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="password" className="input" id="standard-basic" label="password" variant="standard" />
+                        }} name="password" className="inputRegister" id="standard-basic" label="password" variant="standard" />
                         <br />
                         <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="confrom_password" className="input" id="standard-basic" label="conform password"
+                        }} name="confrom_password" className="inputRegister" id="standard-basic" label="conform password"
                             variant="standard" />
                         <br /> <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="email" className="input" id="standard-basic" label="email" variant="standard" /> <br />
+                        }} name="email" className="inputRegister" id="standard-basic" label="email" variant="standard" /> <br />
                         <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="address" className="input" id="standard-basic" label="address" variant="standard" />
+                        }} name="address" className="inputRegister" id="standard-basic" label="address" variant="standard" />
                         <br />
                         <br />
                         <TextField onInput={(ev) => {
                             this.updateState(ev)
-                        }} name="city" className="input" id="standard-basic" label="city" variant="standard" /> <br />
+                        }} name="city" className="inputRegister" id="standard-basic" label="city" variant="standard" /> <br />
                         <br />
                         <OutlinedInput onInput={(ev) => {
                             this.updateState(ev)
                         }}
                             id="outlined-adornment-amount"
-                            className="input"
+                            className="inputRegister"
                             startAdornment={<InputAdornment position="start">977</InputAdornment>}
                             label="Phone number"
                             variant="standard"
                             type="number"
                             name="phone"
                         /> <br /> <br />
-                        <Button onClick={this.submitForm} className="input" variant="outlined">Register</Button>
+                        <Button onClick={this.submitForm} className="inputRegister" variant="outlined">Register</Button>
                     </div>
                     <br />
                     {this.state.renderErr && <div className="alert alert-primary input" role="alert">

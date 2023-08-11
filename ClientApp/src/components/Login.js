@@ -50,7 +50,6 @@ export class Login extends Component {
                 <br /> <br />
                 <center>
                   <div id="loginFrame">
-                    <center>
                       {" "}
                       <br />
                       <h5>Login</h5> <br />
@@ -91,7 +90,6 @@ export class Login extends Component {
                       >
                         Success
                       </Button>
-                    </center>
                   </div>
                 </center>
               </div>

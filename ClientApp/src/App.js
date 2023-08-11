@@ -36,7 +36,7 @@ export default class App extends Component {
             if (response.statusCode === 200) {
               localStorage.setItem("authToken", response.value);
             } else {
-              localStorage.removeItem("authToken");
+              // localStorage.removeItem("authToken");
             }
           });
       }

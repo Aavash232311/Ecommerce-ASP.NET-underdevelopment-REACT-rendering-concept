@@ -4,8 +4,8 @@ namespace restaurant_franchise.Models
     {
         public Guid Id {get; set;}
         public string name { get; set; } = string.Empty;
-        public decimal discount_amount { get; set; } = 0;
-        public int price {get; set;} = 0;
+        public float discount_amount { get; set; } = 0;
+        public float price {get; set;} = 0;
         public string main_image { get; set; } = string.Empty;
         public string cover_0 { get; set; } = string.Empty;
         public string cover_1 { get; set; } = string.Empty;
@@ -17,6 +17,6 @@ namespace restaurant_franchise.Models
         public string product_condition {get; set;} = string.Empty;
         public User user {get; set;} = new User();
         public DateTime addedDate {get; set;} = DateTime.Now;
-        public Category related_tags {get; set;} = new Category();
+        public Category related_tags {get; set;} 
     }
 }

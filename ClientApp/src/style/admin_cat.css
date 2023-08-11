@@ -66,3 +66,12 @@
 #seletCategoryFrame {
     margin-left: 10px;
 }
+
+@media screen and (max-width: 720px) {
+    #frame {
+        width: 100%;
+    }
+    .Frames {
+        width: 45%;
+    }
+}
