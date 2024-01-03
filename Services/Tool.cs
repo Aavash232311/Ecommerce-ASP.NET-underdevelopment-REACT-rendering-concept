@@ -69,6 +69,7 @@ namespace restaurant_franchise.Services
             string stamp = "";
             if (extension != null)
             {
+// not the effective way to do it just check if the image is type object 
                 var fileType = extension.Split(".")[extension.Split(".").Length - 1];
                 for (int i = 0; i < fileExtension.Length; i++)
                 {
