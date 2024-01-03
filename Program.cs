@@ -55,7 +55,7 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "static")),
-    RequestPath = "/static"
+    RequestPath = "/static" // do not use this name was word root
 });
 
 
