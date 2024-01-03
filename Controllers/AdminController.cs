@@ -11,7 +11,7 @@ namespace restaurant_franchise.Controllers
         public string Category { get; set; } = string.Empty;
         public string relation { get; set; } = string.Empty;
     }
-
+// ROLE CONFIGURATION REQUIRED IN PRPGRAM.CS
     [ApiController]
     [Route("admin")]
     // [Authorize(Roles = "Admin")]
